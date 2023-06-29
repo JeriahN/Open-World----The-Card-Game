@@ -1,0 +1,134 @@
+[
+  {
+    "name": "Lake",
+    "description": "A deep and mysterious lake",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Nature"
+  },
+  {
+    "name": "Grass",
+    "description": "A pile of grass",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Nature"
+  },
+  {
+    "name": "Mountain",
+    "description": "A tall and rocky mountain",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Nature"
+  },
+  {
+    "name": "Ocean",
+    "description": "A vast and deep ocean",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Nature"
+  },
+  {
+    "name": "Tree",
+    "description": "A tall and leafy tree",
+    "maxQuantity": 5,
+    "rarity": "Common",
+    "type": "Nature"
+  },
+  {
+    "name": "Stump",
+    "description": "A short and stubby tree stump",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Nature"
+  },
+  {
+    "name": "Leaf",
+    "description": "A green leaf",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Nature"
+  },
+
+  {
+    "name": "House",
+    "description": "A cozy little house",
+    "maxQuantity": 0,
+    "rarity": "Rare",
+    "type": "Building"
+  },
+
+  {
+    "name": "Rock",
+    "description": "A large and sturdy rock",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Material"
+  },
+  {
+    "name": "Stick",
+    "description": "A long, solid stick",
+    "maxQuantity": 3,
+    "rarity": "Common",
+    "type": "Material"
+  },
+  {
+    "name": "Brick",
+    "description": "A concrete brick",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Material"
+  },
+  {
+    "name": "Iron",
+    "description": "A chunk of raw iron",
+    "maxQuantity": 0,
+    "rarity": "Common",
+    "type": "Material"
+  },
+  {
+    "name": "Gold",
+    "description": "A chunk of raw gold",
+    "maxQuantity": 0,
+    "rarity": "Rare",
+    "type": "Material"
+  },
+
+  {
+    "name": "Craft",
+    "description": "Combine cards into a new great card",
+    "maxQuantity": 9999,
+    "rarity": "Tool",
+    "type": "Tool"
+  },
+
+  {
+    "name": "World",
+    "description": "The great world of cards",
+    "maxQuantity": 1,
+    "rarity": "Legendary",
+    "type": "World"
+  },
+  {
+    "name": "Sword Of Atlas",
+    "description": "A sword of great power the size of Jupiter",
+    "maxQuantity": 1,
+    "rarity": "Legendary",
+    "type": "Weapon",
+    "subType": "Sword"
+  },
+
+  {
+    "name": "Creator",
+    "description": "The scribe of cards",
+    "maxQuantity": 1,
+    "rarity": "Shadow",
+    "type": "Special"
+  },
+  {
+    "name": "Destroyer",
+    "description": "Oh how the mighty have fallen!",
+    "maxQuantity": 1,
+    "rarity": "Shadow",
+    "type": "Special"
+  }
+]

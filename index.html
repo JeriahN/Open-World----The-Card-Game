@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A simulation card game" />
+    <link rel="stylesheet" href="./Styles/styles.css" />
+    <title>Open World</title>
+  </head>
+  <body>
+    <div id="menuContainer">
+      <div id="menuButton"><h1>Open World // The Card Game</h1></div>
+      <div id="menu">
+        <div id="cardContainer" class="card-container"></div>
+      </div>
+    </div>
+    <div id="world" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <script src="./Javascript/main.js"></script>
+  </body>
+</html>

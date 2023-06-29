@@ -1,0 +1,430 @@
+/* Variables */
+:root {
+  /* Theme colors */
+  --primary-color: #333;
+  --secondary-color: #fff;
+  --background-color: #f0f0f0;
+  --text-color: #333;
+  --text-muted-color: #777;
+
+  /* Rarities Colors */
+  --common-color: rgb(94, 216, 50);
+  --uncommon-color: rgb(162, 204, 94);
+  --rare-color: rgb(50, 94, 216);
+  --super-rare-color: rgb(61, 50, 216);
+  --epic-color: rgb(207, 183, 0);
+  --legendary-color: rgb(216, 50, 50);
+  --shadow-color: rgb(114, 50, 216);
+
+  /* Type Colors */
+  --nature-color: rgb(94, 216, 50);
+  --environment-color: rgb(141, 216, 50);
+  --building-color: rgb(212, 117, 54);
+  --material-color: rgb(216, 75, 50);
+  --world-color: rgb(52, 142, 133);
+  --weapon-type-color: rgb(50, 50, 50);
+  --special-color: rgb(114, 50, 216);
+
+  --tool-color: rgb(76, 76, 76);
+}
+
+/* CSS styles for the game */
+body {
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--secondary-color);
+  overflow: hidden;
+}
+
+/* World */
+#world {
+  width: 100%;
+  height: 95%;
+  margin: 10px;
+  border-radius: 12px;
+  padding: 0;
+  background-color: var(--background-color);
+  overflow: scroll;
+  position: relative;
+}
+
+/* Menu */
+#menuContainer {
+  position: relative;
+  margin: 10px;
+  width: 300px;
+  height: 95%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: scroll;
+  border-radius: 12px;
+}
+
+#menu {
+  position: absolute;
+  top: 0;
+  left: -220px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: hidden;
+  background-color: var(--background-color);
+  transition: left 0.3s ease-in-out;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#menu.show {
+  left: 0;
+}
+
+#menuButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100%;
+  background-color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--secondary-color);
+  text-align: center;
+  line-height: 50px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#menuButton.closed {
+  transition: 0.3s ease-in-out;
+  border-radius: 0px 12px 12px 0px;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  color: transparent;
+}
+
+#menuButton h1 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 4vh;
+  writing-mode: vertical-lr;
+}
+
+/* Menu Card Container */
+#cardContainer {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+  padding: 15px 0px 15px 0px; /* Adjusted padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: auto; /* Add this line to enable scrolling */
+  gap: 15px;
+}
+
+#cardContainer .card.disabled {
+  cursor: default;
+  transition: 0.3s;
+  display: none;
+}
+
+/* Card */
+.card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--secondary-color);
+  min-height: 200px;
+  width: 70%;
+  padding: 10px;
+  border: 5px solid var(--primary-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+  cursor: grab;
+  transform-style: preserve-3d;
+  transition: transform 0.3s;
+  gap: 5px;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+.card img {
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.card h3 {
+  font-size: 14px;
+  margin: 0px;
+  padding: 0px;
+  color: var(--text-color);
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card p {
+  font-size: 12px;
+  margin: 0px;
+  padding: 0px;
+  color: var(--text-muted-color);
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card .quantity {
+  margin: 0px;
+  padding: 0px;
+  font-weight: bolder;
+}
+
+/* Card Specs */
+.card .card-specs {
+  width: 100%;
+  height: 30px;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card .card-specs * {
+  background-color: var(--background-color);
+  font-size: 12px;
+  margin: 0px;
+  padding: 3px 8px;
+  border-radius: 100vw;
+  color: var(--text-muted-color);
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Card Rarities */
+.card .card-specs .card-rarity.Common {
+  color: var(--common-color);
+}
+
+.card.Common {
+  border: 5px solid var(--common-color);
+}
+
+.card.Common img {
+  border: 1px solid var(--common-color);
+}
+
+.card .card-specs .card-rarity.Uncommon {
+  color: var(--uncommon-color);
+}
+
+.card.Uncommon {
+  border: 5px solid var(--uncommon-color);
+}
+
+.card.Uncommon img {
+  border: 1px solid var(--uncommon-color);
+}
+
+.card .card-specs .card-rarity.Rare {
+  color: var(--rare-color);
+}
+
+.card.Rare {
+  border: 5px solid var(--rare-color);
+}
+
+.card.Rare img {
+  border: 1px solid var(--rare-color);
+}
+
+.card .card-specs .card-rarity.SuperRare {
+  color: var(--super-rare-color);
+}
+
+.card.SuperRare {
+  border: 5px solid var(--super-rare-color);
+}
+
+.card.SuperRare img {
+  border: 1px solid var(--super-rare-color);
+}
+
+.card .card-specs .card-rarity.Epic {
+  color: var(--epic-color);
+}
+
+.card.Epic {
+  border: 5px solid var(--epic-color);
+}
+
+.card.Epic img {
+  border: 1px solid var(--epic-color);
+}
+
+.card .card-specs .card-rarity.Legendary {
+  color: var(--legendary-color);
+}
+
+.card.Legendary {
+  border: 5px solid var(--legendary-color);
+}
+
+.card.Legendary img {
+  border: 1px solid var(--legendary-color);
+}
+
+.card .card-specs .card-rarity.Tool {
+  color: var(--tool-color);
+}
+
+.card.Tool {
+  border: 5px solid var(--tool-color);
+}
+
+.card.Tool img {
+  border: 1px solid var(--tool-color);
+}
+
+.card .card-specs .card-rarity.Shadow {
+  color: var(--shadow-color);
+}
+
+.card.Shadow {
+  border: 5px solid var(--shadow-color);
+}
+
+.card.Shadow img {
+  border: 1px solid var(--shadow-color);
+}
+
+/* Card Types */
+.card .card-specs .card-type.Nature {
+  color: var(--nature-color);
+}
+
+.card .card-specs .card-type.Environment {
+  color: var(--environment-color);
+}
+
+.card .card-specs .card-type.Building {
+  color: var(--building-color);
+}
+
+.card .card-specs .card-type.Material {
+  color: var(--material-color);
+}
+
+.card .card-specs .card-type.Tool {
+  color: var(--tool-color);
+}
+
+.card .card-specs .card-type.Weapon {
+  color: var(--weapon-color);
+}
+
+.card .card-specs .card-type.World {
+  color: var(--world-color);
+}
+
+.card .card-specs .card-type.Special {
+  color: var(--special-color);
+}
+
+.highlight-left,
+.highlight-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  opacity: 0; /* Initial opacity */
+}
+
+.highlight-left {
+  left: 0;
+}
+
+.highlight-right {
+  right: 0;
+}
+
+/* Placed card */
+.placed-card {
+  position: absolute;
+}
+
+.placed-card img {
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0px;
+  padding: 3px;
+  -webkit-user-drag: none;
+}
+
+.placed-card.Common img {
+  border: 1px solid var(--common-color);
+}
+
+.placed-card.Uncommon img {
+  border: 1px solid var(--uncommon-color);
+}
+
+.placed-card.Rare img {
+  border: 1px solid var(--rare-color);
+}
+
+.placed-card.SuperRare img {
+  border: 1px solid var(--super-rare-color);
+}
+
+.placed-card.Epic img {
+  border: 1px solid var(--epic-color);
+}
+
+.placed-card.Legendary img {
+  border: 1px solid var(--legendary-color);
+}
+
+.placed-card.Tool img {
+  border: 1px solid var(--tool-color);
+}
+
+.placed-card.Shadow img {
+  border: 1px solid var(--shadow-color);
+}
+
+.placed-card h3 {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
