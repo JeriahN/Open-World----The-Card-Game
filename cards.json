@@ -60,7 +60,7 @@
   {
     "name": "Rock",
     "description": "A large and sturdy rock",
-    "maxQuantity": 0,
+    "maxQuantity": 1,
     "rarity": "Common",
     "type": "Material"
   },
@@ -94,10 +94,10 @@
   },
 
   {
-    "name": "Craft",
-    "description": "Combine cards into a new great card",
-    "maxQuantity": 9999,
-    "rarity": "Tool",
+    "name": "Pickaxe",
+    "description": "A pickaxe with a stick handle and a stone head",
+    "maxQuantity": 1,
+    "rarity": "Common",
     "type": "Tool"
   },
 

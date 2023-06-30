@@ -43,6 +43,15 @@ body {
   overflow: hidden;
 }
 
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 /* World */
 #world {
   width: 100%;
@@ -99,6 +108,7 @@ body {
   height: 100%;
   background-color: var(--primary-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   color: var(--secondary-color);
   text-align: center;
   line-height: 50px;
@@ -121,6 +131,8 @@ body {
 }
 
 #menuButton h1 {
+  margin: 0px;
+  padding: 0px;
   font-family: "Times New Roman", Times, serif;
   font-size: 4vh;
   writing-mode: vertical-lr;
@@ -131,12 +143,13 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   height: 100%;
-  padding: 15px 0px 15px 0px; /* Adjusted padding */
+  padding: 15px 0px 15px 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  overflow: auto; /* Add this line to enable scrolling */
+  overflow-x: hidden;
+  overflow-y: auto;
   gap: 15px;
 }
 

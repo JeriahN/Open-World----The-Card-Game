@@ -1,9 +1,3 @@
-// This JavaScript file contains code for a menu and card system. The menu functionality allows the user to toggle the visibility of a menu by clicking on a menu button. The menu can also be opened automatically when the mouse enters the menu button. If the mouse leaves the menu container, and there is no interaction with the menu, it will automatically close after a brief delay. Additionally, when the menu is open and the user clicks outside the menu container, the menu will close.
-
-// The file defines a class called Card, which represents a card object. Each card has various properties such as name, description, max quantity, rarity, and type. The Card class also contains methods for updating the card's quantity, getting the image path for the card, and handling mouse events for the card's tilt effect.
-
-// The file includes functions for loading card data from a JSON file, displaying the cards on the page, and handling drag and drop functionality. The loadCardData function fetches card data from a JSON file and creates Card objects based on the data. The displayCards function generates HTML elements for each card and attaches event listeners for the tilt effect. The drop function handles the dropping of cards onto a designated area (the "world") and updates the card's quantity accordingly. The allowDrop function prevents default drag and drop behavior. The initializeApp function initializes the application by loading card data, displaying the cards, and setting up event listeners for drag and drop functionality.
-
 const menuContainer = document.getElementById("menuContainer");
 const menuButton = document.getElementById("menuButton");
 const menu = document.getElementById("menu");
@@ -12,6 +6,12 @@ const world = document.getElementById("world");
 let isMenuOpen = false;
 let isMouseOverMenu = false;
 let cards;
+const recipes = [
+  {
+    result: "Pickaxe",
+    ingredients: ["Rock", "Stick"],
+  },
+];
 
 const toggleMenu = () => {
   isMenuOpen = !isMenuOpen;
@@ -48,6 +48,19 @@ document.addEventListener("click", (event) => {
   }
 });
 
+function handleMouseMove(event) {
+  const cardRect = this.element.getBoundingClientRect();
+  const cardCenterX = cardRect.left + cardRect.width / 2;
+  const cardCenterY = cardRect.top + cardRect.height / 2;
+  const tiltX = (event.clientX - cardCenterX) / 10;
+  const tiltY = (event.clientY - cardCenterY) / 10;
+  this.element.style.transform = `rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
+}
+
+function handleMouseLeave() {
+  this.element.style.transform = "none";
+}
+
 class Card {
   constructor(name, description, maxQuantity, rarity, type) {
     this.name = name;
@@ -57,8 +70,8 @@ class Card {
     this.type = type;
     this.quantity = 0;
     this.element = null;
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleMouseMove = handleMouseMove.bind(this);
+    this.handleMouseLeave = handleMouseLeave.bind(this);
   }
 
   updateQuantity(change) {
@@ -80,126 +93,130 @@ class Card {
     const sanitizedName = this.name.replace(/\s+/g, "-");
     return `Images/${sanitizedName}.jpeg`;
   }
-
-  handleMouseMove(event) {
-    const cardRect = this.element.getBoundingClientRect();
-    const cardCenterX = cardRect.left + cardRect.width / 2;
-    const cardCenterY = cardRect.top + cardRect.height / 2;
-    const tiltX = (event.clientX - cardCenterX) / 10;
-    const tiltY = (event.clientY - cardCenterY) / 10;
-    this.element.style.transform = `rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
-  }
-
-  handleMouseLeave() {
-    this.element.style.transform = "none";
-  }
 }
 
-function loadCardData(callback) {
-  fetch("cards.json")
-    .then((response) => response.json())
-    .then((data) => {
-      const cards = data.map((card) => {
-        const sanitizedName = card.name.replace(/\s+/g, "-");
-        return new Card(
-          sanitizedName,
-          card.description,
-          card.maxQuantity,
-          card.rarity,
-          card.type
-        );
-      });
-      callback(cards);
-    })
-    .catch((error) => console.error("Error loading card data:", error));
+async function loadCardData(callback) {
+  try {
+    const response = await fetch("cards.json");
+    const data = await response.json();
+    const cards = data.map((card) => {
+      const sanitizedName = card.name.replace(/\s+/g, "-");
+      return new Card(
+        sanitizedName,
+        card.description,
+        card.maxQuantity,
+        card.rarity,
+        card.type
+      );
+    });
+    callback(cards);
+  } catch (error) {
+    console.error("Error loading card data:", error);
+  }
 }
 
 function displayCards(cards) {
+  const fragment = document.createDocumentFragment(); // Use a document fragment for efficient DOM manipulation
+
   cards.forEach((card) => {
     const cardElement = document.createElement("div");
-    cardElement.classList.add("card", card.name, card.rarity, card.type);
-    cardElement.setAttribute("draggable", "true");
+    cardElement.className = `card ${card.name} ${card.rarity} ${card.type}`;
+    cardElement.draggable = true;
 
     if (card.maxQuantity <= 0) {
       cardElement.classList.add("disabled");
-      cardElement.setAttribute("draggable", "false");
+      cardElement.draggable = false;
     }
 
-    const displayName = card.name.replace(/-/g, " "); // Replace dashes with spaces
+    const displayName = card.name.replace(/-/g, " ");
+    const imagePath = card.getImagePath();
+
     cardElement.innerHTML = `
       <div class="card-specs">
         <div class="card-rarity ${card.rarity}">${card.rarity}</div>
         <div class="card-type ${card.type}">${card.type}</div>
       </div>
-      <img src="${card.getImagePath()}" alt="${card.name}">
+      <img src="${imagePath}" alt="${card.name}">
       <div class="card-content">
-        <h3>${displayName}</h3> <!-- Display name with spaces -->
+        <h3>${displayName}</h3>
         <p>${card.description}</p>
         <div class="quantity">${card.maxQuantity - card.quantity}</div>
       </div>
     `;
 
     // Add event listeners for tilt effect
-    cardElement.addEventListener("mouseenter", (event) => {
-      const cardRect = cardElement.getBoundingClientRect();
-      const mouseX = event.clientX - cardRect.left;
-      const mouseY = event.clientY - cardRect.top;
-      const tiltX = (mouseX / cardRect.width - 0.5) * 30;
-      const tiltY = (mouseY / cardRect.height - 0.5) * 30;
-      const depth = 10;
-      cardElement.style.transform = `perspective(1000px) rotateX(${-tiltY}deg) rotateY(${tiltX}deg) translateZ(${depth}px)`;
-      cardElement.style.boxShadow = `${-tiltX / 2}px ${
-        -tiltY / 2
-      }px ${depth}px rgba(0, 0, 0, 0.2)`;
-      cardElement.style.transition = "transform 0.5s, box-shadow 0.5s";
+    cardElement.addEventListener("mouseenter", handleCardMouseEnter);
+    cardElement.addEventListener("mouseleave", handleCardMouseLeave);
+    cardElement.addEventListener("dragstart", handleCardDragStart);
+    cardElement.addEventListener("dragend", handleCardDragEnd);
 
-      // Calculate glare opacity based on tilt values
-      const glareOpacity = Math.abs(tiltX) / 30;
-
-      // Add highlights
-      const highlightLeft = document.createElement("div");
-      highlightLeft.classList.add("highlight-left");
-      highlightLeft.style.opacity = glareOpacity;
-      const highlightRight = document.createElement("div");
-      highlightRight.classList.add("highlight-right");
-      highlightRight.style.opacity = glareOpacity;
-      cardElement.appendChild(highlightLeft);
-      cardElement.appendChild(highlightRight);
-    });
-
-    cardElement.addEventListener("mouseleave", () => {
-      cardElement.style.transform = "none";
-      cardElement.style.boxShadow = "none";
-      cardElement.style.transition = "transform 0.5s, box-shadow 0.5s";
-
-      // Remove highlights
-      const highlightLeft = cardElement.querySelector(".highlight-left");
-      const highlightRight = cardElement.querySelector(".highlight-right");
-      highlightLeft.parentNode.removeChild(highlightLeft);
-      highlightRight.parentNode.removeChild(highlightRight);
-    });
-
-    cardElement.addEventListener("dragstart", (event) => {
-      event.dataTransfer.setData("text/plain", card.name);
-      event.dataTransfer.effectAllowed = "move";
-      event.currentTarget.classList.add("dragging");
-      cardElement.classList.add("dragging");
-      cardElement.style.zIndex = "999"; // Apply a higher z-index when dragging
-      cardElement.parentElement.style.zIndex = "999"; // Apply a higher z-index to the parent container
-      if (isMenuOpen) {
-        toggleMenu();
-      }
-    });
-
-    cardElement.addEventListener("dragend", (event) => {
-      event.currentTarget.classList.remove("dragging");
-      cardElement.style.zIndex = "auto"; // Reset the z-index when dragging ends
-      cardElement.parentElement.style.zIndex = "auto"; // Reset the parent container's z-index
-    });
-
-    cardContainer.appendChild(cardElement);
     card.element = cardElement;
+    fragment.appendChild(cardElement);
   });
+
+  cardContainer.appendChild(fragment);
+}
+
+function handleCardMouseEnter(event) {
+  const cardElement = event.currentTarget;
+  const cardRect = cardElement.getBoundingClientRect();
+  const mouseX = event.clientX - cardRect.left;
+  const mouseY = event.clientY - cardRect.top;
+  const tiltX = (mouseX / cardRect.width - 0.5) * 30;
+  const tiltY = (mouseY / cardRect.height - 0.5) * 30;
+  const depth = 10;
+  cardElement.style.transform = `perspective(1000px) rotateX(${-tiltY}deg) rotateY(${tiltX}deg) translateZ(${depth}px)`;
+  cardElement.style.boxShadow = `${-tiltX / 2}px ${
+    -tiltY / 2
+  }px ${depth}px rgba(0, 0, 0, 0.2)`;
+  cardElement.style.transition = "transform 0.5s, box-shadow 0.5s";
+
+  const glareOpacity = Math.abs(tiltX) / 30;
+
+  const highlightLeft = document.createElement("div");
+  highlightLeft.classList.add("highlight-left");
+  highlightLeft.style.opacity = glareOpacity;
+  const highlightRight = document.createElement("div");
+  highlightRight.classList.add("highlight-right");
+  highlightRight.style.opacity = glareOpacity;
+  cardElement.appendChild(highlightLeft);
+  cardElement.appendChild(highlightRight);
+}
+
+function handleCardMouseLeave(event) {
+  const cardElement = event.currentTarget;
+  cardElement.style.transform = "none";
+  cardElement.style.boxShadow = "none";
+  cardElement.style.transition = "transform 0.5s, box-shadow 0.5s";
+
+  const highlightLeft = cardElement.querySelector(".highlight-left");
+  const highlightRight = cardElement.querySelector(".highlight-right");
+  highlightLeft.parentNode.removeChild(highlightLeft);
+  highlightRight.parentNode.removeChild(highlightRight);
+}
+
+function handleCardDragStart(event) {
+  const cardElement = event.currentTarget;
+  const card = cards.find(
+    (c) => c.name === cardElement.getAttribute("class").split(" ")[1]
+  );
+
+  event.dataTransfer.setData("text/plain", card.name);
+  event.dataTransfer.effectAllowed = "move";
+  cardElement.classList.add("dragging");
+  cardElement.style.zIndex = "999";
+  cardElement.parentElement.style.zIndex = "999";
+
+  if (isMenuOpen) {
+    toggleMenu();
+  }
+}
+
+function handleCardDragEnd(event) {
+  const cardElement = event.currentTarget;
+  cardElement.classList.remove("dragging");
+  cardElement.style.zIndex = "auto";
+  cardElement.parentElement.style.zIndex = "auto";
 }
 
 function drop(event) {
@@ -214,32 +231,178 @@ function drop(event) {
 
     world.removeEventListener("drop", drop);
 
-    const cardElement = document.createElement("div");
-    cardElement.classList.add("placed-card", card.name, card.rarity, card.type);
-    cardElement.style.left = `${offsetX}px`;
-    cardElement.style.top = `${offsetY}px`;
-    cardElement.innerHTML = `
-      <img src="${card.getImagePath()}" alt="${card.name}">
-    `;
-
-    // Reset transformations on the placed card element
-    cardElement.style.transform = "none";
-
+    const cardElement = createPlacedCardElement(card, offsetX, offsetY);
     world.appendChild(cardElement);
 
     card.updateQuantity(1);
 
     if (card.quantity >= card.maxQuantity) {
-      card.element.classList.add("disabled");
-      card.element.setAttribute("draggable", "false");
+      disableCard(card);
     }
 
-    console.info("Dropped Card: ", card);
+    const placedCards = Array.from(document.querySelectorAll(".placed-card"));
+    const overlappingCards = findOverlappingCards(cardElement, placedCards);
 
-    world.addEventListener("drop", drop);
+    placedCards.push(cardElement);
 
-    event.stopPropagation();
+    if (overlappingCards.length > 0) {
+      const matchingRecipe = findMatchingRecipe(overlappingCards);
+
+      if (matchingRecipe) {
+        const resultCard = cards.find((c) => c.name === matchingRecipe.result);
+        resultCard.updateQuantity(1);
+
+        if (resultCard.quantity >= resultCard.maxQuantity) {
+          disableCard(resultCard);
+        }
+
+        const resultCardElement = createPlacedCardElement(
+          resultCard,
+          offsetX,
+          offsetY
+        );
+        world.appendChild(resultCardElement);
+
+        console.log("Crafted Result Card:", resultCard);
+      }
+
+      console.log(overlappingCards);
+    }
+
+    const recipe = recipes.find((r) => r.result === card.name);
+    if (recipe) {
+      const canCraft = checkCanCraft(recipe.ingredients);
+
+      if (canCraft) {
+        craftResultCard(recipe.ingredients, recipe.result, offsetX, offsetY);
+      }
+    }
   }
+}
+
+function createPlacedCardElement(card, offsetX, offsetY) {
+  const cardElement = document.createElement("div");
+  cardElement.classList.add("placed-card", card.name, card.rarity, card.type);
+  cardElement.style.cssText = `left: ${offsetX}px; top: ${offsetY}px;`;
+  cardElement.innerHTML = `
+    <img src="${card.getImagePath()}" alt="${card.name}">
+  `;
+
+  // Reset transformations on the placed card element
+  cardElement.style.transform = "none";
+
+  return cardElement;
+}
+
+function disableCard(card) {
+  card.element.classList.add("disabled");
+  card.element.setAttribute("draggable", "false");
+}
+
+let AABB = {
+  collide: function (el1, el2) {
+    var rect1 = el1.getBoundingClientRect();
+    var rect2 = el2.getBoundingClientRect();
+
+    return !(
+      rect1.top > rect2.bottom ||
+      rect1.right < rect2.left ||
+      rect1.bottom < rect2.top ||
+      rect1.left > rect2.right
+    );
+  },
+
+  inside: function (el1, el2) {
+    var rect1 = el1.getBoundingClientRect();
+    var rect2 = el2.getBoundingClientRect();
+
+    return (
+      rect1.top <= rect2.bottom &&
+      rect1.bottom >= rect2.top &&
+      rect1.left <= rect2.right &&
+      rect1.right >= rect2.left
+    );
+  },
+};
+
+function findOverlappingCards(cardElement, placedCards) {
+  const overlappingCards = [];
+
+  for (const placedCard of placedCards) {
+    if (AABB.collide(cardElement, placedCard)) {
+      overlappingCards.push(placedCard);
+    }
+  }
+
+  return overlappingCards;
+}
+
+function findMatchingRecipe(overlappingCards) {
+  const overlappingCardNames = overlappingCards.map(
+    (card) => card.classList[1]
+  );
+
+  return recipes.find((recipe) =>
+    recipe.ingredients.every((ingredient) =>
+      overlappingCardNames.includes(ingredient)
+    )
+  );
+}
+
+function checkCanCraft(ingredients) {
+  return ingredients.every((ingredient) => {
+    const ingredientCard = cards.find((c) => c.name === ingredient);
+    return ingredientCard.quantity > 0;
+  });
+}
+
+function craftResultCard(ingredients, result, offsetX, offsetY) {
+  const overlappingCardNames = ingredients;
+
+  const overlappingCards = Array.from(
+    document.getElementsByClassName("placed-card")
+  ).filter((placedCard) =>
+    overlappingCardNames.includes(placedCard.classList[1])
+  );
+
+  overlappingCards.forEach((ingredientCard) => {
+    ingredientCard.parentNode.removeChild(ingredientCard);
+
+    const ingredientCardObj = cards.find(
+      (c) => c.name === ingredientCard.classList[1]
+    );
+    ingredientCardObj.updateQuantity(-1);
+
+    if (ingredientCardObj.quantity < ingredientCardObj.maxQuantity) {
+      enableCard(ingredientCardObj);
+    }
+  });
+
+  const resultCard = cards.find((c) => c.name === result);
+  resultCard.updateQuantity(1);
+
+  if (resultCard.quantity >= resultCard.maxQuantity) {
+    disableCard(resultCard);
+  }
+
+  const resultCardElement = createPlacedCardElement(
+    resultCard,
+    offsetX,
+    offsetY
+  );
+  world.appendChild(resultCardElement);
+
+  console.log("Crafted Result Card:", resultCard);
+}
+
+function enableCard(card) {
+  card.element.classList.remove("disabled");
+  card.element.draggable = true;
+}
+
+function disableCard(card) {
+  card.element.classList.add("disabled");
+  card.element.draggable = false;
 }
 
 function allowDrop(event) {
@@ -247,7 +410,7 @@ function allowDrop(event) {
 }
 
 function initializeApp() {
-  loadCardData((cardData) => {
+  function cardDataLoaded(cardData) {
     cards = cardData.map(
       (data) =>
         new Card(
@@ -260,9 +423,11 @@ function initializeApp() {
     );
     displayCards(cards);
 
-    world.addEventListener("dragover", allowDrop);
+    world.addEventListener("dragover", allowDrop); // Add the 'dragover' event listener
     world.addEventListener("drop", drop);
-  });
+  }
+
+  loadCardData(cardDataLoaded);
 }
 
 initializeApp();
