@@ -138,9 +138,10 @@ body {
   writing-mode: vertical-lr;
 }
 
-/* Menu Card Container */
+/* Sort Buttons */
+#menu .sortButtons,
+#filterContainer,
 #cardContainer {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   height: 100%;
   padding: 15px 0px 15px 0px;
@@ -151,6 +152,57 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   gap: 15px;
+}
+
+#menu .sortButtons {
+  flex-direction: row;
+  justify-content: center;
+  flex: 1;
+}
+
+#menu .sortButtons .sortButton {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  height: 100%;
+  width: 25%;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: row;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+#menu .sortButtons .sortButton:hover {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+#menu #filterContainer {
+  flex-direction: row;
+  justify-content: center;
+  flex: 0.5;
+}
+
+#menu #filterContainer label {
+  font-size: 12px;
+  vertical-align: top;
+}
+
+#menu #filterContainer .cardFilter {
+  height: 100%;
+  width: 20%;
+}
+
+/* Menu Card Container */
+#cardContainer {
+  flex: 20;
 }
 
 #cardContainer .card.disabled {

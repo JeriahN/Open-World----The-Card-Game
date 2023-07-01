@@ -6,12 +6,33 @@ const world = document.getElementById("world");
 let isMenuOpen = false;
 let isMouseOverMenu = false;
 let cards;
+
 const recipes = [
   {
     result: "Pickaxe",
     ingredients: ["Rock", "Stick"],
   },
 ];
+
+try {
+  // Button click event handlers
+  document.getElementById("sortByNameBtn").addEventListener("click", () => {
+    sortByName(cards);
+  });
+
+  document.getElementById("sortByRarityBtn").addEventListener("click", () => {
+    sortByRarity(cards);
+  });
+
+  document.getElementById("sortByTypeBtn").addEventListener("click", () => {
+    sortByType(cards);
+  });
+} catch (error) {
+  console.error(
+    "Could not get sorting elements or could not apply event listeners.",
+    error
+  );
+}
 
 const toggleMenu = () => {
   isMenuOpen = !isMenuOpen;
@@ -95,6 +116,23 @@ class Card {
   }
 }
 
+function filterCards() {
+  const typeFilter = document.getElementById("typeFilter").value;
+  const rarityFilter = document.getElementById("rarityFilter").value;
+
+  const filteredCards = cards.filter((card) => {
+    if (typeFilter && card.type !== typeFilter) {
+      return false;
+    }
+    if (rarityFilter && card.rarity !== rarityFilter) {
+      return false;
+    }
+    return true;
+  });
+
+  displayCards(filteredCards);
+}
+
 async function loadCardData(callback) {
   try {
     const response = await fetch("cards.json");
@@ -110,13 +148,33 @@ async function loadCardData(callback) {
       );
     });
     callback(cards);
+
+    // Generate filter options for card types
+    const cardTypes = [...new Set(cards.map((card) => card.type))];
+    const typeFilterContainer = document.getElementById("typeFilter");
+    cardTypes.forEach((type) => {
+      const option = document.createElement("option");
+      option.textContent = type;
+      option.value = type;
+      typeFilterContainer.appendChild(option);
+    });
+
+    // Generate filter options for card rarities
+    const cardRarities = [...new Set(cards.map((card) => card.rarity))];
+    const rarityFilterContainer = document.getElementById("rarityFilter");
+    cardRarities.forEach((rarity) => {
+      const option = document.createElement("option");
+      option.textContent = rarity;
+      option.value = rarity;
+      rarityFilterContainer.appendChild(option);
+    });
   } catch (error) {
     console.error("Error loading card data:", error);
   }
 }
 
 function displayCards(cards) {
-  const fragment = document.createDocumentFragment(); // Use a document fragment for efficient DOM manipulation
+  const fragment = document.createDocumentFragment();
 
   cards.forEach((card) => {
     const cardElement = document.createElement("div");
@@ -154,7 +212,29 @@ function displayCards(cards) {
     fragment.appendChild(cardElement);
   });
 
+  // Clear existing cards
+  cardContainer.innerHTML = "";
+
+  // Append sorted cards to the card container
   cardContainer.appendChild(fragment);
+}
+
+// Sort cards by name in ascending order
+function sortByName(cards) {
+  cards.sort((a, b) => a.name.localeCompare(b.name));
+  displayCards(cards);
+}
+
+// Sort cards by rarity in ascending order
+function sortByRarity(cards) {
+  cards.sort((a, b) => a.rarity.localeCompare(b.rarity));
+  displayCards(cards);
+}
+
+// Sort cards by type in ascending order
+function sortByType(cards) {
+  cards.sort((a, b) => a.type.localeCompare(b.type));
+  displayCards(cards);
 }
 
 function handleCardMouseEnter(event) {
