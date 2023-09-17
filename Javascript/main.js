@@ -7,6 +7,9 @@ let isMenuOpen = false;
 let isMouseOverMenu = false;
 let cards;
 
+// Initialize Fuse for searching cards
+let fuse;
+
 const recipes = [
   {
     result: "Pickaxe",
@@ -15,17 +18,19 @@ const recipes = [
 ];
 
 try {
-  // Button click event handlers
   document.getElementById("sortByNameBtn").addEventListener("click", () => {
     sortByName(cards);
+    applyFiltersAndSort(); // Add this line to apply filters and sort after changing the sorting method
   });
 
   document.getElementById("sortByRarityBtn").addEventListener("click", () => {
     sortByRarity(cards);
+    applyFiltersAndSort(); // Add this line to apply filters and sort after changing the sorting method
   });
 
   document.getElementById("sortByTypeBtn").addEventListener("click", () => {
     sortByType(cards);
+    applyFiltersAndSort(); // Add this line to apply filters and sort after changing the sorting method
   });
 } catch (error) {
   console.error(
@@ -503,11 +508,96 @@ function initializeApp() {
     );
     displayCards(cards);
 
+    // Create a Fuse instance for searching cards
+    const fuseOptions = {
+      keys: ["name", "description", "type", "rarity"],
+      threshold: 0.3, // Adjust the threshold as needed
+    };
+    fuse = new Fuse(cards, fuseOptions);
+
     world.addEventListener("dragover", allowDrop); // Add the 'dragover' event listener
     world.addEventListener("drop", drop);
+
+    // Add an event listener for the search box
+    const searchBox = document.getElementById("searchBox");
+    searchBox.addEventListener("input", handleSearch);
   }
 
   loadCardData(cardDataLoaded);
+}
+
+function applyFiltersAndSort() {
+  const typeFilter = document.getElementById("typeFilter").value;
+  const rarityFilter = document.getElementById("rarityFilter").value;
+  const searchBox = document.getElementById("searchBox");
+  const searchTerm = searchBox.value.toLowerCase(); // Convert search term to lowercase for case-insensitive search
+
+  let filteredCards = cards;
+
+  // Apply sorting based on the selected sorting method
+  const sortMethod = document.querySelector(".sortButton.active").id;
+  switch (sortMethod) {
+    case "sortByNameBtn":
+      filteredCards.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case "sortByRarityBtn":
+      filteredCards.sort((a, b) => a.rarity.localeCompare(b.rarity));
+      break;
+    case "sortByTypeBtn":
+      filteredCards.sort((a, b) => a.type.localeCompare(b.type));
+      break;
+  }
+
+  // Apply filters
+  if (typeFilter) {
+    filteredCards = filteredCards.filter((card) => card.type === typeFilter);
+  }
+
+  if (rarityFilter) {
+    filteredCards = filteredCards.filter(
+      (card) => card.rarity === rarityFilter
+    );
+  }
+
+  // Apply search only if there's a non-empty search term
+  if (searchTerm !== "") {
+    const fuseOptions = {
+      keys: ["name", "description", "type", "rarity"],
+      threshold: 0.3, // Adjust the threshold as needed
+    };
+    const fuse = new Fuse(filteredCards, fuseOptions);
+    const searchResults = fuse.search(searchTerm);
+    filteredCards = searchResults.map((result) => result.item);
+  }
+
+  displayCards(filteredCards);
+}
+
+function handleSearch() {
+  const searchBox = document.getElementById("searchBox");
+  const searchTerm = searchBox.value.trim().toLowerCase(); // Remove leading/trailing spaces and convert to lowercase
+
+  if (!fuse) {
+    // Exit the function if fuse is not initialized
+    return;
+  }
+
+  if (searchTerm === "") {
+    // If the search term is empty, reset the display to show all cards
+    displayCards(cards);
+  } else {
+    const searchResults = fuse.search(searchTerm);
+
+    if (searchResults.length > 0) {
+      const filteredCards = searchResults.map((result) => result.item);
+      displayCards(filteredCards);
+    } else {
+      // Handle no results found
+      displayCards([]); // Clear the card container
+    }
+  }
+
+  applyFiltersAndSort(); // Apply filters and sorting if necessary
 }
 
 initializeApp();

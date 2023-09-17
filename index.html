@@ -16,6 +16,14 @@
     <div id="menuContainer">
       <div id="menuButton"><h1>Open World // The Card Game</h1></div>
       <div id="menu">
+        <div class="searchBox">
+          <input
+            type="text"
+            id="searchBox"
+            placeholder="Search for a card..."
+            oninput="handleSearch()"
+          />
+        </div>
         <div class="sortButtons">
           <a class="sortButton" id="sortByNameBtn"><span>Name</span></a>
           <a class="sortButton" id="sortByRarityBtn"><span>Rarity</span></a>
@@ -36,6 +44,7 @@
       </div>
     </div>
     <div id="world" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <script src="./Javascript/fuse.js"></script>
     <script src="./Javascript/main.js"></script>
   </body>
 </html>
