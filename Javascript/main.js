@@ -39,6 +39,16 @@ try {
   );
 }
 
+// Apply focused class to the .searchBox while #searchBox is focused
+document.getElementById("searchBox").addEventListener("focus", () => {
+  document.querySelector(".searchBox").classList.add("focused");
+});
+
+// Remove focused class from the .searchBox while #searchBox is not focused
+document.getElementById("searchBox").addEventListener("blur", () => {
+  document.querySelector(".searchBox").classList.remove("focused");
+});
+
 const toggleMenu = () => {
   isMenuOpen = !isMenuOpen;
   menu.classList.toggle("show", isMenuOpen);
@@ -54,11 +64,17 @@ menuButton.addEventListener("click", toggleMenu);
 menuButton.addEventListener("mouseenter", () => {
   if (!isMenuOpen) {
     toggleMenu();
+    document.getElementById("searchBox").focus();
+  } else {
+    document.activeElement.blur();
   }
 });
 
 menuContainer.addEventListener("mouseleave", () => {
   isMouseOverMenu = false;
+  if (isMenuOpen) {
+    document.activeElement.blur();
+  }
   setTimeout(() => {
     if (!isMouseOverMenu && isMenuOpen) {
       toggleMenu();

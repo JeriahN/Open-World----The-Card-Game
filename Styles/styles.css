@@ -6,26 +6,6 @@
   --background-color: #f0f0f0;
   --text-color: #333;
   --text-muted-color: #777;
-
-  /* Rarities Colors */
-  --common-color: rgb(94, 216, 50);
-  --uncommon-color: rgb(162, 204, 94);
-  --rare-color: rgb(50, 94, 216);
-  --super-rare-color: rgb(61, 50, 216);
-  --epic-color: rgb(207, 183, 0);
-  --legendary-color: rgb(216, 50, 50);
-  --shadow-color: rgb(114, 50, 216);
-
-  /* Type Colors */
-  --nature-color: rgb(94, 216, 50);
-  --environment-color: rgb(141, 216, 50);
-  --building-color: rgb(212, 117, 54);
-  --material-color: rgb(216, 75, 50);
-  --world-color: rgb(52, 142, 133);
-  --weapon-type-color: rgb(50, 50, 50);
-  --special-color: rgb(114, 50, 216);
-
-  --tool-color: rgb(76, 76, 76);
 }
 
 /* CSS styles for the game */
@@ -161,7 +141,7 @@ body {
   background-color: var(--secondary-color);
   color: var(--primary-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  border-radius: 8px;
   height: 100%;
   width: 25%;
   margin: 0px;
@@ -206,6 +186,64 @@ body {
   cursor: default;
   transition: 0.3s;
   display: none;
+}
+
+.searchBox {
+  width: 85%;
+  height: 25px;
+  margin: 0px;
+  margin-top: 25px;
+  padding: 0px 5px;
+  border-radius: 8px;
+  border: 2px solid var(--primary-color);
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  outline: none;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.searchBox svg {
+  width: 20px;
+  height: 20px;
+  margin: 0px;
+  padding: 0px;
+  color: var(--primary-color);
+}
+
+.searchBox input {
+  width: 95%;
+  height: 100%;
+  margin: 0px 5px;
+  padding: 0px;
+  border: none;
+  background-color: transparent;
+  color: var(--primary-color);
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  outline: none;
+  text-align: left;
+}
+
+.focused {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.focused svg {
+  color: var(--secondary-color);
+}
+
+.focused input {
+  color: var(--secondary-color);
 }
 
 /* Card */
@@ -289,136 +327,6 @@ body {
   overflow: hidden;
 }
 
-/* Card Rarities */
-.card .card-specs .card-rarity.Common {
-  color: var(--common-color);
-}
-
-.card.Common {
-  border: 5px solid var(--common-color);
-}
-
-.card.Common img {
-  border: 1px solid var(--common-color);
-}
-
-.card .card-specs .card-rarity.Uncommon {
-  color: var(--uncommon-color);
-}
-
-.card.Uncommon {
-  border: 5px solid var(--uncommon-color);
-}
-
-.card.Uncommon img {
-  border: 1px solid var(--uncommon-color);
-}
-
-.card .card-specs .card-rarity.Rare {
-  color: var(--rare-color);
-}
-
-.card.Rare {
-  border: 5px solid var(--rare-color);
-}
-
-.card.Rare img {
-  border: 1px solid var(--rare-color);
-}
-
-.card .card-specs .card-rarity.SuperRare {
-  color: var(--super-rare-color);
-}
-
-.card.SuperRare {
-  border: 5px solid var(--super-rare-color);
-}
-
-.card.SuperRare img {
-  border: 1px solid var(--super-rare-color);
-}
-
-.card .card-specs .card-rarity.Epic {
-  color: var(--epic-color);
-}
-
-.card.Epic {
-  border: 5px solid var(--epic-color);
-}
-
-.card.Epic img {
-  border: 1px solid var(--epic-color);
-}
-
-.card .card-specs .card-rarity.Legendary {
-  color: var(--legendary-color);
-}
-
-.card.Legendary {
-  border: 5px solid var(--legendary-color);
-}
-
-.card.Legendary img {
-  border: 1px solid var(--legendary-color);
-}
-
-.card .card-specs .card-rarity.Tool {
-  color: var(--tool-color);
-}
-
-.card.Tool {
-  border: 5px solid var(--tool-color);
-}
-
-.card.Tool img {
-  border: 1px solid var(--tool-color);
-}
-
-.card .card-specs .card-rarity.Shadow {
-  color: var(--shadow-color);
-}
-
-.card.Shadow {
-  border: 5px solid var(--shadow-color);
-}
-
-.card.Shadow img {
-  border: 1px solid var(--shadow-color);
-}
-
-/* Card Types */
-.card .card-specs .card-type.Nature {
-  color: var(--nature-color);
-}
-
-.card .card-specs .card-type.Environment {
-  color: var(--environment-color);
-}
-
-.card .card-specs .card-type.Building {
-  color: var(--building-color);
-}
-
-.card .card-specs .card-type.Material {
-  color: var(--material-color);
-}
-
-.card .card-specs .card-type.Tool {
-  color: var(--tool-color);
-}
-
-.card .card-specs .card-type.Weapon {
-  color: var(--weapon-color);
-}
-
-.card .card-specs .card-type.World {
-  color: var(--world-color);
-}
-
-.card .card-specs .card-type.Special {
-  color: var(--special-color);
-}
-
 .highlight-left,
 .highlight-right {
   position: absolute;
@@ -451,38 +359,6 @@ body {
   margin: 0px;
   padding: 3px;
   -webkit-user-drag: none;
-}
-
-.placed-card.Common img {
-  border: 1px solid var(--common-color);
-}
-
-.placed-card.Uncommon img {
-  border: 1px solid var(--uncommon-color);
-}
-
-.placed-card.Rare img {
-  border: 1px solid var(--rare-color);
-}
-
-.placed-card.SuperRare img {
-  border: 1px solid var(--super-rare-color);
-}
-
-.placed-card.Epic img {
-  border: 1px solid var(--epic-color);
-}
-
-.placed-card.Legendary img {
-  border: 1px solid var(--legendary-color);
-}
-
-.placed-card.Tool img {
-  border: 1px solid var(--tool-color);
-}
-
-.placed-card.Shadow img {
-  border: 1px solid var(--shadow-color);
 }
 
 .placed-card h3 {
