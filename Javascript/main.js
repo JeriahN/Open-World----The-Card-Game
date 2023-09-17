@@ -41,12 +41,12 @@ try {
 
 // Apply focused class to the .searchBox while #searchBox is focused
 document.getElementById("searchBox").addEventListener("focus", () => {
-  document.querySelector(".searchBox").classList.add("focused");
+  document.querySelector(".searchBox").classList.add("searchBoxFocused");
 });
 
 // Remove focused class from the .searchBox while #searchBox is not focused
 document.getElementById("searchBox").addEventListener("blur", () => {
-  document.querySelector(".searchBox").classList.remove("focused");
+  document.querySelector(".searchBox").classList.remove("searchBoxFocused");
 });
 
 const toggleMenu = () => {
@@ -60,6 +60,10 @@ const toggleMenu = () => {
 };
 
 menuButton.addEventListener("click", toggleMenu);
+
+document.querySelector(".searchBox").addEventListener("click", () => {
+  document.getElementById("searchBox").focus();
+});
 
 menuButton.addEventListener("mouseenter", () => {
   if (!isMenuOpen) {

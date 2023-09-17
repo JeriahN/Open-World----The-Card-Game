@@ -189,7 +189,7 @@ body {
 }
 
 .searchBox {
-  width: 85%;
+  width: 82%;
   height: 25px;
   margin: 0px;
   margin-top: 25px;
@@ -231,18 +231,24 @@ body {
   text-align: center;
   outline: none;
   text-align: left;
+  cursor: default;
 }
 
-.focused {
+.searchBox input:focus {
+  cursor: text;
+}
+
+.searchBoxFocused {
   background-color: var(--primary-color);
   color: var(--secondary-color);
+  cursor: text;
 }
 
-.focused svg {
+.searchBoxFocused svg {
   color: var(--secondary-color);
 }
 
-.focused input {
+.searchBoxFocused input {
   color: var(--secondary-color);
 }
 
