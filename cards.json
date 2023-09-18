@@ -32,7 +32,8 @@
     "description": "A tall and leafy tree",
     "maxQuantity": 5,
     "rarity": "Common",
-    "type": "Nature"
+    "type": "Nature",
+    "function": "plantTree()"
   },
   {
     "name": "Stump",
