@@ -37,22 +37,6 @@
             oninput="handleSearch()"
           />
         </div>
-        <div class="sortButtons">
-          <a class="sortButton" id="sortByNameBtn"><span>Name</span></a>
-          <a class="sortButton" id="sortByRarityBtn"><span>Rarity</span></a>
-          <a class="sortButton" id="sortByTypeBtn"><span>Type</span></a>
-        </div>
-        <div id="filterContainer">
-          <label for="typeFilter">Type:</label>
-          <select class="cardFilter" id="typeFilter" onchange="filterCards()">
-            <option value="">All</option>
-          </select>
-
-          <label for="rarityFilter">Rarity:</label>
-          <select class="cardFilter" id="rarityFilter" onchange="filterCards()">
-            <option value="">All</option>
-          </select>
-        </div>
         <div id="cardContainer" class="card-container"></div>
       </div>
     </div>

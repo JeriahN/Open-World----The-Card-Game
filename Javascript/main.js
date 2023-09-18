@@ -17,28 +17,6 @@ const recipes = [
   },
 ];
 
-try {
-  document.getElementById("sortByNameBtn").addEventListener("click", () => {
-    sortByName(cards);
-    applyFiltersAndSort(); // Add this line to apply filters and sort after changing the sorting method
-  });
-
-  document.getElementById("sortByRarityBtn").addEventListener("click", () => {
-    sortByRarity(cards);
-    applyFiltersAndSort(); // Add this line to apply filters and sort after changing the sorting method
-  });
-
-  document.getElementById("sortByTypeBtn").addEventListener("click", () => {
-    sortByType(cards);
-    applyFiltersAndSort(); // Add this line to apply filters and sort after changing the sorting method
-  });
-} catch (error) {
-  console.error(
-    "Could not get sorting elements or could not apply event listeners.",
-    error
-  );
-}
-
 // Apply focused class to the .searchBox while #searchBox is focused
 document.getElementById("searchBox").addEventListener("focus", () => {
   document.querySelector(".searchBox").classList.add("searchBoxFocused");
@@ -162,22 +140,22 @@ async function loadCardData(callback) {
     // Generate filter options for card types
     const cardTypes = [...new Set(cards.map((card) => card.type))];
     const typeFilterContainer = document.getElementById("typeFilter");
-    cardTypes.forEach((type) => {
-      const option = document.createElement("option");
-      option.textContent = type;
-      option.value = type;
-      typeFilterContainer.appendChild(option);
-    });
+    // cardTypes.forEach((type) => {
+    //   const option = document.createElement("option");
+    //   option.textContent = type;
+    //   option.value = type;
+    //   typeFilterContainer.appendChild(option);
+    // });
 
     // Generate filter options for card rarities
-    const cardRarities = [...new Set(cards.map((card) => card.rarity))];
-    const rarityFilterContainer = document.getElementById("rarityFilter");
-    cardRarities.forEach((rarity) => {
-      const option = document.createElement("option");
-      option.textContent = rarity;
-      option.value = rarity;
-      rarityFilterContainer.appendChild(option);
-    });
+    // const cardRarities = [...new Set(cards.map((card) => card.rarity))];
+    // const rarityFilterContainer = document.getElementById("rarityFilter");
+    // cardRarities.forEach((rarity) => {
+    //   const option = document.createElement("option");
+    //   option.textContent = rarity;
+    //   option.value = rarity;
+    //   rarityFilterContainer.appendChild(option);
+    // });
   } catch (error) {
     console.error("Error loading card data:", error);
   }
