@@ -94,19 +94,6 @@ document.addEventListener("click", (event) => {
   }
 });
 
-function handleMouseMove(event) {
-  const cardRect = this.element.getBoundingClientRect();
-  const cardCenterX = cardRect.left + cardRect.width / 2;
-  const cardCenterY = cardRect.top + cardRect.height / 2;
-  const tiltX = (event.clientX - cardCenterX) / 10;
-  const tiltY = (event.clientY - cardCenterY) / 10;
-  this.element.style.transform = `rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
-}
-
-function handleMouseLeave() {
-  this.element.style.transform = "none";
-}
-
 class Card {
   constructor(name, description, maxQuantity, rarity, type) {
     this.name = name;
@@ -116,8 +103,6 @@ class Card {
     this.type = type;
     this.quantity = 0;
     this.element = null;
-    this.handleMouseMove = handleMouseMove.bind(this);
-    this.handleMouseLeave = handleMouseLeave.bind(this);
   }
 
   updateQuantity(change) {
@@ -198,6 +183,39 @@ async function loadCardData(callback) {
   }
 }
 
+function generateGradientFromImage(image) {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  canvas.width = image.width;
+  canvas.height = image.height;
+  context.drawImage(image, 0, 0, image.width, image.height);
+
+  // Get the pixel data from the image
+  const imageData = context.getImageData(0, 0, image.width, image.height).data;
+
+  // Calculate the average color from the image data
+  let sumR = 0;
+  let sumG = 0;
+  let sumB = 0;
+
+  for (let i = 0; i < imageData.length; i += 4) {
+    sumR += imageData[i];
+    sumG += imageData[i + 1];
+    sumB += imageData[i + 2];
+  }
+
+  const averageR = Math.round(sumR / (image.width * image.height));
+  const averageG = Math.round(sumG / (image.width * image.height));
+  const averageB = Math.round(sumB / (image.width * image.height));
+
+  // Create a gradient from the average color to a slightly darker shade
+  const gradient = `linear-gradient(to bottom, rgb(${averageR},${averageG},${averageB}), rgb(${
+    averageR - 20
+  },${averageG - 20},${averageB - 20}))`;
+
+  return gradient;
+}
+
 function displayCards(cards) {
   const fragment = document.createDocumentFragment();
 
@@ -205,6 +223,11 @@ function displayCards(cards) {
     const cardElement = document.createElement("div");
     cardElement.className = `card ${card.name} ${card.rarity} ${card.type}`;
     cardElement.draggable = true;
+    VanillaTilt.init(cardElement, {
+      reverse: true, // reverse the tilt direction
+      max: 10, // max tilt rotation (degrees)
+      glare: true, // if it should have a "glare" effect
+    });
 
     if (card.maxQuantity <= 0) {
       cardElement.classList.add("disabled");
@@ -227,9 +250,13 @@ function displayCards(cards) {
       </div>
     `;
 
-    // Add event listeners for tilt effect
-    cardElement.addEventListener("mouseenter", handleCardMouseEnter);
-    cardElement.addEventListener("mouseleave", handleCardMouseLeave);
+    // Generate the gradient from the image and set it as the background
+    const cardImage = cardElement.querySelector("img");
+    cardImage.onload = () => {
+      const gradient = generateGradientFromImage(cardImage);
+      cardElement.style.background = gradient;
+    };
+
     cardElement.addEventListener("dragstart", handleCardDragStart);
     cardElement.addEventListener("dragend", handleCardDragEnd);
 
@@ -260,44 +287,6 @@ function sortByRarity(cards) {
 function sortByType(cards) {
   cards.sort((a, b) => a.type.localeCompare(b.type));
   displayCards(cards);
-}
-
-function handleCardMouseEnter(event) {
-  const cardElement = event.currentTarget;
-  const cardRect = cardElement.getBoundingClientRect();
-  const mouseX = event.clientX - cardRect.left;
-  const mouseY = event.clientY - cardRect.top;
-  const tiltX = (mouseX / cardRect.width - 0.5) * 30;
-  const tiltY = (mouseY / cardRect.height - 0.5) * 30;
-  const depth = 10;
-  cardElement.style.transform = `perspective(1000px) rotateX(${-tiltY}deg) rotateY(${tiltX}deg) translateZ(${depth}px)`;
-  cardElement.style.boxShadow = `${-tiltX / 2}px ${
-    -tiltY / 2
-  }px ${depth}px rgba(0, 0, 0, 0.2)`;
-  cardElement.style.transition = "transform 0.5s, box-shadow 0.5s";
-
-  const glareOpacity = Math.abs(tiltX) / 30;
-
-  const highlightLeft = document.createElement("div");
-  highlightLeft.classList.add("highlight-left");
-  highlightLeft.style.opacity = glareOpacity;
-  const highlightRight = document.createElement("div");
-  highlightRight.classList.add("highlight-right");
-  highlightRight.style.opacity = glareOpacity;
-  cardElement.appendChild(highlightLeft);
-  cardElement.appendChild(highlightRight);
-}
-
-function handleCardMouseLeave(event) {
-  const cardElement = event.currentTarget;
-  cardElement.style.transform = "none";
-  cardElement.style.boxShadow = "none";
-  cardElement.style.transition = "transform 0.5s, box-shadow 0.5s";
-
-  const highlightLeft = cardElement.querySelector(".highlight-left");
-  const highlightRight = cardElement.querySelector(".highlight-right");
-  highlightLeft.parentNode.removeChild(highlightLeft);
-  highlightRight.parentNode.removeChild(highlightRight);
 }
 
 function handleCardDragStart(event) {
@@ -392,9 +381,6 @@ function createPlacedCardElement(card, offsetX, offsetY) {
   cardElement.innerHTML = `
     <img src="${card.getImagePath()}" alt="${card.name}">
   `;
-
-  // Reset transformations on the placed card element
-  cardElement.style.transform = "none";
 
   return cardElement;
 }

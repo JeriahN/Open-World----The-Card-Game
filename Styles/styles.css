@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Nunito";
+  src: url("./Fonts/Nunito-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
 /* Variables */
 :root {
   /* Theme colors */
@@ -6,6 +13,9 @@
   --background-color: #f0f0f0;
   --text-color: #333;
   --text-muted-color: #777;
+  --text-color-secondary: #fff;
+  --text-muted-color-secondary: #ccc;
+  --text-color-tertiary: #616161;
 }
 
 /* CSS styles for the game */
@@ -18,7 +28,7 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Nunito", Arial, Helvetica, sans-serif;
   background-color: var(--secondary-color);
   overflow: hidden;
 }
@@ -84,7 +94,7 @@ body {
   background-color: var(--primary-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  color: var(--secondary-color);
+  color: var(--text-color-secondary);
   text-align: center;
   line-height: 50px;
   cursor: pointer;
@@ -268,12 +278,7 @@ body {
   text-align: center;
   cursor: grab;
   transform-style: preserve-3d;
-  transition: transform 0.3s;
   gap: 5px;
-}
-
-.card:hover {
-  transform: translateY(-5px) scale(1.02);
 }
 
 .card img {
@@ -283,13 +288,14 @@ body {
   border-radius: 8px;
   margin: 0px;
   padding: 0px;
+  transform: translateZ(20px);
 }
 
 .card h3 {
   font-size: 14px;
   margin: 0px;
   padding: 0px;
-  color: var(--text-color);
+  color: var(--secondary-color);
   text-transform: uppercase;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -299,7 +305,7 @@ body {
   font-size: 12px;
   margin: 0px;
   padding: 0px;
-  color: var(--text-muted-color);
+  color: var(--text-muted-color-secondary);
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -308,6 +314,7 @@ body {
   margin: 0px;
   padding: 0px;
   font-weight: bolder;
+  color: var(--text-color-secondary);
 }
 
 /* Card Specs */
@@ -320,6 +327,11 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  transform: translateZ(20px);
+}
+
+.card .card-content {
+  transform: translateZ(20px);
 }
 
 .card .card-specs * {
@@ -331,25 +343,6 @@ body {
   color: var(--text-muted-color);
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-.highlight-left,
-.highlight-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  background-color: rgba(255, 255, 255, 0.3);
-  pointer-events: none;
-  opacity: 0; /* Initial opacity */
-}
-
-.highlight-left {
-  left: 0;
-}
-
-.highlight-right {
-  right: 0;
 }
 
 /* Placed card */
