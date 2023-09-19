@@ -11,9 +11,10 @@
     />
     <link rel="stylesheet" href="./Styles/specific.css" />
     <link rel="stylesheet" href="./Styles/styles.css" />
+    <link rel="stylesheet" href="./Styles/world.css" />
     <title>Open World // The Card Game</title>
   </head>
-  <body>
+  <body onload="generateTerrain()">
     <div id="menuContainer">
       <div id="menuButton"><h1>Open World // The Card Game</h1></div>
       <div id="menu">
@@ -41,8 +42,12 @@
       </div>
     </div>
     <div id="world" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <script src="./Javascript/jquery.js"></script>
+    <script src="./Javascript/math.js"></script>
     <script src="./Javascript/fuse.js"></script>
     <script src="./Javascript/tilt.js"></script>
     <script src="./Javascript/main.js"></script>
+    <script src="./Javascript/perlin.js"></script>
+    <script src="./Javascript/generate.js"></script>
   </body>
 </html>

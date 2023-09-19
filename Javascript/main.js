@@ -2,7 +2,7 @@ const menuContainer = document.getElementById("menuContainer");
 const menuButton = document.getElementById("menuButton");
 const menu = document.getElementById("menu");
 const cardContainer = document.getElementById("cardContainer");
-const world = document.getElementById("world");
+let world = document.getElementById("world");
 let isMenuOpen = false;
 let isMouseOverMenu = false;
 let cards;
